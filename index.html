@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graza Extra Virgin Olive Oil</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: antiquewhite;
+            /* Set background color to beige */
+            margin: 0;
+            /* Remove default margin */
+            padding: 0;
+            /* Remove default padding */
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .carousel-container {
+            flex: 1;
+            background-color: #f0f0f0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            display: none;
+        }
+
+        .carousel-button {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            padding: 10px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transform: translateY(-50%);
+        }
+
+        .slide-button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 50%;
+            /* Make the buttons circular */
+            transition: background-color 0.3s ease;
+            /* Add fade animation */
+        }
+
+        .slide-button:hover {
+            background-color: #555;
+            /* Change color on hover */
+        }
+
+        .slide-buttons {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-left: 10px;
+            /* Adjust left margin */
+        }
+
+        .slide-buttons button {
+            margin-bottom: 5px;
+            /* Added to create space between buttons */
+        }
+
+        .slide:first-child {
+            display: block;
+        }
+
+        .product-details-container {
+            flex: 1;
+            max-width: calc(100% - 400px);
+            overflow-y: auto;
+            padding: 1rem;
+            /* Add padding for gaps */
+            margin-left: 1rem;
+            /* Add margin for gaps */
+        }
+
+        .bg-container {
+            /* Set background color */
+            border-radius: 15px;
+            /* Add rounded corners */
+            padding: 1rem;
+            /* Add padding */
+            margin-bottom: 1rem;
+            /* Add margin between containers */
+        }
+
+        .nav-link {
+            padding: 0.5rem 1rem;
+        }
+
+        .product-description {
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: #4b5563;
+            display: none;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .btn-container {
+            margin-top: 1rem;
+        }
+
+        .btn-container button {
+            padding: 0.75rem 1.5rem;
+            /* Adjusted padding for larger buttons */
+            margin-right: 0.5rem;
+            background-color: #4a5568;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .product-details {
+            text-align: center;
+            /* Center align product details */
+            padding-top: 2rem;
+            /* Add space at the top */
+        }
+
+        .product-title {
+            font-size: 3em;
+            margin-bottom: 2rem;
+        }
+
+        .quantity-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .quantity-button {
+            background-color: #f3f3f3;
+            padding: 0.75rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-button.active,
+        .quantity-button:hover {
+            background-color: #8bc34a;
+            /* Green background for active/hover state */
+            border-color: #8bc34a;
+            color: white;
+        }
+
+        .purchase-options {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            font-weight: bold;
+        }
+
+        .purchase-option-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+        }
+
+        .purchase-option-label input[type="radio"] {
+            display: none;
+        }
+
+        .purchase-option-label .option-button {
+            display: inline-block;
+            padding: 1rem;
+            border-radius: 5px;
+            background-color: #8bc34a;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .purchase-option-label input[type="radio"]:checked+.option-button {
+            background-color: #659f3d;
+            /* Darker green when checked */
+        }
+
+        .purchase-option-label .option-button:hover {
+            background-color: #659f3d;
+            /* Darker green on hover */
+        }
+
+        .subscribe-section {
+            margin-bottom: 1rem;
+        }
+
+        .subscribe-button {
+            background-color: #8bc34a;
+            padding: 1rem;
+            border-radius: 5px;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .subscribe-button:hover {
+            background-color: #659f3d;
+            /* Darker green on hover */
+        }
+
+        /* Styles for the description tabs below */
+        .description-tabs {
+            display: flex;
+            justify-content: space-around;
+            padding: 1rem 0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .tab {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border: none;
+            background: none;
+        }
+
+        .active-tab {
+            border-bottom: 2px solid #8bc34a;
+            font-weight: bold;
+        }
+
+        .description-content {
+            display: none;
+        }
+
+        .description-content.active {
+            display: block;
+            text-align: left;
+            padding: 1rem;
+        }
+
+        .bg-container1 {
+            background-color: beige;
+            /* Set background color */
+            border-radius: 15px;
+            /* Add rounded corners */
+            padding: 1rem;
+            /* Add padding */
+            margin-bottom: 1rem;
+            /* Add margin between containers */
+            border: solid black 2px;
+        }
+
+        .purchase-options {
+            display: flex;
+            flex-direction: column;
+            margin-top: 1rem;
+        }
+
+        .purchase-options>div {
+            margin-bottom: 0.5rem;
+        }
+
+        .purchase-options input[type="radio"] {
+            display: none;
+        }
+
+        .purchase-options label {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #e2e8f0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .purchase-options input[type="radio"]:checked+label {
+            background-color: #4299e1;
+            color: #fff;
+        }
+
+        .add-to-cart-button {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #38a169;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-to-cart-button:hover {
+            background-color: #2f855a;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container mx-auto">
+        <div class="container">
+            <div class="slide-buttons absolute bottom-0 left-0 mb-4 ml-4">
+                <button class="slide-button" onclick="showSlide(0)">1</button>
+                <button class="slide-button" onclick="showSlide(1)">2</button>
+                <button class="slide-button" onclick="showSlide(2)">3</button>
+                <button class="slide-button" onclick="showSlide(3)">4</button>
+                <button class="slide-button" onclick="showSlide(4)">5</button>
+                <!-- Add more buttons for additional slides -->
+            </div>
+            <div class="carousel-container relative">
+                <div class="slide" style="background-color: #ff6347;">Red Slide</div>
+                <div class="slide" style="background-color: #00bfff;">Blue Slide</div>
+                <div class="slide" style="background-color: #32cd32;">Green Slide</div>
+                <div class="slide" style="background-color: #ff69b4;">Pink Slide</div>
+                <div class="slide" style="background-color: #ffff00;">Yellow Slide</div>
+                <!-- Add more slides with different colors as needed -->
+            </div>
+            <section class="product-details-container">
+                <div class="bg-container">
+                    <div class="product-details">
+                        <div class="product-title">
+                            <h1>"Drizzle" & "Sizzle" <br>Extra Virgin Olive Oil</h1>
+                        </div>
+                        <p>★★★★☆ 881 Reviews</p>
+                        <div class="bg-container1">
+                            <div class="quantity-buttons">
+                                <button class="quantity-button active">1 Set <br>+10% Off</button>
+                                <button class="quantity-button">2 Sets <br>Free Shipping! +14% Off</button>
+                                <button class="quantity-button">3 Sets <br>Free Shipping! +15% Off</button>
+                                <button class="quantity-button">6 Sets <br>Free Shipping! +17% Off</button>
+                            </div>
+
+                            <div class="purchase-options">
+                                <div>
+                                    <input type="radio" id="one-time" name="purchase-option" checked>
+                                    <label for="one-time">One Time Purchase $37</label>
+                                </div>
+                                <div>
+                                    <input type="radio" id="subscribe" name="purchase-option">
+                                    <label for="subscribe">Subscribe & Save $33.30</label>
+                                </div>
+                            </div>
+                            <button class="add-to-cart-button">Add to Cart</button>
+
+                        </div>
+                        <!-- Description tabs -->
+                        <div class="bg-container1">
+                            <div class="description-tabs">
+                                <button class="tab active-tab" onclick="showDescription(0)">DESCRIPTION</button>
+                                <button class="tab" onclick="showDescription(1)">HARVEST</button>
+                                <button class="tab" onclick="showDescription(2)">USE CASES</button>
+                            </div>
+                            <!-- Description content -->
+                            <div class="description-content active">
+                                <p>DRIZZLE: 500ML</p>
+                                <p>Extra Virgin finishing oil made from olives that are picked early, when flavor is
+                                    bold and antioxidants are highest. Made for eating, never heating.</p>
+                            </div>
+                            <div class="description-content">
+                                <p>HARVEST</p>
+                                <p>This olive oil is harvested in the picturesque hills of Tuscany, Italy, where the
+                                    climate and soil provide the perfect conditions for producing olives with
+                                    exceptional flavor.</p>
+                            </div>
+                            <div class="description-content">
+                                <p>USE CASES</p>
+                                <p>Use this premium olive oil for drizzling over salads, dipping with bread, marinating
+                                    meats, and adding a finishing touch to your favorite dishes.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+
+        function showSlide(slideIndex) {
+            if (slideIndex >= 0 && slideIndex < slides.length) {
+                slides[currentSlide].style.display = 'none';
+                currentSlide = slideIndex;
+                slides[currentSlide].style.display = 'block';
+            }
+        }
+
+        function showDescription(descriptionIndex) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.description-content');
+
+            tabs.forEach((tab, index) => {
+                if (index === descriptionIndex) {
+                    tab.classList.add('active-tab');
+                } else {
+                    tab.classList.remove('active-tab');
+                }
+            });
+
+            contents.forEach((content, index) => {
+                if (index === descriptionIndex) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
